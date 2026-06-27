@@ -1,0 +1,145 @@
+{
+  "name": "SOC Report Generator - SOCFlow Placeholder Template",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# SOC Report Generator\n\nSOCFlow n8n workflow template. Import this file into n8n and configure the nodes for your SOC environment.",
+        "height": 260,
+        "width": 360
+      },
+      "id": "09a7c3ec-f416-467b-ad52-4444191259fc",
+      "name": "Guide Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "report-generator",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a09dfa9f-90c4-45ce-8841-76e9ca4c9aba",
+      "name": "Website Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2fb9fad3-a038-406f-90cf-e494a83f6c55",
+              "name": "automation",
+              "value": "SOC Report Generator",
+              "type": "string"
+            },
+            {
+              "id": "7e897bf5-f4ab-4610-956b-2fdd54070027",
+              "name": "template_status",
+              "value": "socflow-template",
+              "type": "string"
+            },
+            {
+              "id": "aee2a2a0-3b38-4919-9ee1-fbc2b2a41967",
+              "name": "soc_goal",
+              "value": "Create structured SOC report",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "69508adc-e45b-462b-8fd7-fa9c566c4d6b",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    ok: true,\n    automation: $json.automation,\n    status: 'socflow-template',\n    message: 'SOCFlow workflow executed successfully. Configure this Code node with your SOC rules and enrichment logic.',\n    recommended_output: {\n      summary: 'Short analyst summary goes here.',\n      severity: 'low | medium | high | critical',\n      evidence: [],\n      next_steps: []\n    },\n    received_input: $json\n  }\n}];"
+      },
+      "id": "9fed33b7-d594-4a61-9b95-32d221f4a0ed",
+      "name": "Build Template Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "521047d1-041b-4e0b-b519-fe8519e6a563",
+      "name": "Respond to Website",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Website Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Build Template Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Template Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Website",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "socflow-template",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "socflowNote": "SOCFlow n8n workflow template for SOC automation."
+  },
+  "tags": []
+}

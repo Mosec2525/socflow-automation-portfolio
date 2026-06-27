@@ -1,0 +1,145 @@
+{
+  "name": "Smart Case Routing - SOCFlow Placeholder Template",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# Smart Case Routing\n\nSOCFlow n8n workflow template. Import this file into n8n and configure the nodes for your SOC environment.",
+        "height": 260,
+        "width": 360
+      },
+      "id": "b9817774-4c00-44d3-bf3d-c9cafa510b76",
+      "name": "Guide Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "case-routing",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a8dd87c1-bd2c-4d19-ac7f-a960b9cf3d95",
+      "name": "Website Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5f2ac139-1717-42fb-910a-2249528f4c93",
+              "name": "automation",
+              "value": "Smart Case Routing",
+              "type": "string"
+            },
+            {
+              "id": "b01ef803-f1c9-4501-8dfc-94df31bd656d",
+              "name": "template_status",
+              "value": "socflow-template",
+              "type": "string"
+            },
+            {
+              "id": "cbcd0299-350c-4f18-ae50-a6e3dbe32893",
+              "name": "soc_goal",
+              "value": "Route SOC cases to the right queue",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1d8eefd4-4ad5-4585-8fe1-02e1eded0af2",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    ok: true,\n    automation: $json.automation,\n    status: 'socflow-template',\n    message: 'SOCFlow workflow executed successfully. Configure this Code node with your SOC rules and enrichment logic.',\n    recommended_output: {\n      summary: 'Short analyst summary goes here.',\n      severity: 'low | medium | high | critical',\n      evidence: [],\n      next_steps: []\n    },\n    received_input: $json\n  }\n}];"
+      },
+      "id": "39106e4d-0cc2-4705-9f10-d64f75532211",
+      "name": "Build Template Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "2b46647c-f513-44c6-9a69-a1e259f1b1ad",
+      "name": "Respond to Website",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Website Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Build Template Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Template Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Website",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "socflow-template",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "socflowNote": "SOCFlow n8n workflow template for SOC automation."
+  },
+  "tags": []
+}

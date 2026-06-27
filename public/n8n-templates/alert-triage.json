@@ -1,0 +1,145 @@
+{
+  "name": "Alert Triage Assistant - SOCFlow Placeholder Template",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# Alert Triage Assistant\n\nSOCFlow n8n workflow template. Import this file into n8n and configure the nodes for your SOC environment.",
+        "height": 260,
+        "width": 360
+      },
+      "id": "95f89e11-4532-461a-80be-45ee6acf3a1f",
+      "name": "Guide Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "alert-triage",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "7202bb93-ecb4-456e-81d0-626a6bcd07e1",
+      "name": "Website Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8b756cf1-cd78-404c-84ef-96c08a9fe137",
+              "name": "automation",
+              "value": "Alert Triage Assistant",
+              "type": "string"
+            },
+            {
+              "id": "800fe0e6-299a-4c6e-8bc3-ed045fac0f44",
+              "name": "template_status",
+              "value": "socflow-template",
+              "type": "string"
+            },
+            {
+              "id": "cb092c60-d667-49be-8eca-8332d400cb91",
+              "name": "soc_goal",
+              "value": "Classify alert and build SOC next steps",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7938a341-61d6-451a-87ed-698f3a39c9c1",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    ok: true,\n    automation: $json.automation,\n    status: 'socflow-template',\n    message: 'SOCFlow workflow executed successfully. Configure this Code node with your SOC rules and enrichment logic.',\n    recommended_output: {\n      summary: 'Short analyst summary goes here.',\n      severity: 'low | medium | high | critical',\n      evidence: [],\n      next_steps: []\n    },\n    received_input: $json\n  }\n}];"
+      },
+      "id": "9e8f0288-f158-44d6-9f49-d2a74d97ae6f",
+      "name": "Build Template Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "c7f09868-79f6-482d-92d6-e33c888ecfe7",
+      "name": "Respond to Website",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Website Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Build Template Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Template Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Website",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "socflow-template",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "socflowNote": "SOCFlow n8n workflow template for SOC automation."
+  },
+  "tags": []
+}

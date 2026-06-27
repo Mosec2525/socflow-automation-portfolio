@@ -1,0 +1,145 @@
+{
+  "name": "Phishing Investigation - SOCFlow Placeholder Template",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# Phishing Investigation\n\nSOCFlow n8n workflow template. Import this file into n8n and configure the nodes for your SOC environment.",
+        "height": 260,
+        "width": 360
+      },
+      "id": "76e2e2e3-d73a-44b3-84d6-454500445eae",
+      "name": "Guide Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "phishing-investigation",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "73c5a806-ca00-4359-9457-297cad8c7644",
+      "name": "Website Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "eb11c81e-4e5e-4034-b041-4f938f35ca12",
+              "name": "automation",
+              "value": "Phishing Investigation",
+              "type": "string"
+            },
+            {
+              "id": "28d95ceb-f5eb-496b-b2e9-5745c389c618",
+              "name": "template_status",
+              "value": "socflow-template",
+              "type": "string"
+            },
+            {
+              "id": "a936a59d-ae6c-4a72-a01e-c1d18bd6d766",
+              "name": "soc_goal",
+              "value": "Analyze phishing email artifacts",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1d14e334-9eed-4b3e-8b62-8d3ff3af6a78",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    ok: true,\n    automation: $json.automation,\n    status: 'socflow-template',\n    message: 'SOCFlow workflow executed successfully. Configure this Code node with your SOC rules and enrichment logic.',\n    recommended_output: {\n      summary: 'Short analyst summary goes here.',\n      severity: 'low | medium | high | critical',\n      evidence: [],\n      next_steps: []\n    },\n    received_input: $json\n  }\n}];"
+      },
+      "id": "4a6bc1fd-07cc-453f-88a9-850808785f06",
+      "name": "Build Template Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "0c8cd38f-1b3c-4e78-9568-b6723690a6c6",
+      "name": "Respond to Website",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Website Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Build Template Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Template Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Website",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "socflow-template",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "socflowNote": "SOCFlow n8n workflow template for SOC automation."
+  },
+  "tags": []
+}

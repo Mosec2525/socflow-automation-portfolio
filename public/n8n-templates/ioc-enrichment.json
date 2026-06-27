@@ -1,0 +1,145 @@
+{
+  "name": "IOC Enrichment Flow - SOCFlow Placeholder Template",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# IOC Enrichment Flow\n\nSOCFlow n8n workflow template. Import this file into n8n and configure the nodes for your SOC environment.",
+        "height": 260,
+        "width": 360
+      },
+      "id": "a962d4d0-dbc5-4611-a0c1-c02602c7ad1f",
+      "name": "Guide Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ioc-enrichment",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "95850727-4ad5-4741-ae30-568dc82787c7",
+      "name": "Website Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d48eca40-e2cc-4dcd-9626-3d156060f444",
+              "name": "automation",
+              "value": "IOC Enrichment Flow",
+              "type": "string"
+            },
+            {
+              "id": "b0351522-31f7-482c-91a1-5207b9ed4183",
+              "name": "template_status",
+              "value": "socflow-template",
+              "type": "string"
+            },
+            {
+              "id": "a9a2d9b9-daf6-46b1-9f61-7280305d2ea5",
+              "name": "soc_goal",
+              "value": "Enrich indicators and build a risk score",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "37732c49-df98-4efd-9a8e-9b6b6c543731",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    ok: true,\n    automation: $json.automation,\n    status: 'socflow-template',\n    message: 'SOCFlow workflow executed successfully. Configure this Code node with your SOC rules and enrichment logic.',\n    recommended_output: {\n      summary: 'Short analyst summary goes here.',\n      severity: 'low | medium | high | critical',\n      evidence: [],\n      next_steps: []\n    },\n    received_input: $json\n  }\n}];"
+      },
+      "id": "70c4ac26-fb52-44f2-8157-c9e39f807b39",
+      "name": "Build Template Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "784a5a75-94dc-403f-a49d-3ce6092cc127",
+      "name": "Respond to Website",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Website Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Build Template Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Template Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Website",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "socflow-template",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "socflowNote": "SOCFlow n8n workflow template for SOC automation."
+  },
+  "tags": []
+}
