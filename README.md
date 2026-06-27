@@ -30,20 +30,5 @@ Set your GitHub repository URL before deployment:
 NEXT_PUBLIC_GITHUB_URL=https://github.com/Mosec2525/socflow-automation-portfolio
 ```
 
-## n8n workflow files
-
-Workflow JSON files are stored in:
-
-```text
-public/n8n-templates/
-```
-
-## Configure webhooks
-
-Copy `.env.example` to `.env.local` and add your n8n webhook URLs.
-
-```bash
-cp .env.example .env.local
-```
-
-Then restart the dev server.
+The public site links to the tested n8n workflow editors. Webhook tokens and
+credentials are intentionally excluded from the client and repository.
